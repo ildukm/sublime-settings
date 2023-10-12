@@ -1,0 +1,21 @@
+[
+	{ "keys": ["shift+alt+down"], "command": "duplicate_line" },
+	{ "keys": ["super+shift+k"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete Line.sublime-macro"} },
+	{ "keys": ["alt+up"], "command": "swap_line_up" },
+	{ "keys": ["alt+down"], "command": "swap_line_down" },
+	{ "keys": ["shift+alt+f"], "command": "pretty_json" },
+	{ "keys": ["super+b"], "command": "toggle_side_bar" },
+	{ "keys": ["ctrl+j"], "command": "join_lines" },
+
+	// Replace panel key bindings
+	{ "keys": ["super+enter"], "command": "replace_all", "args": {"close_panel": true},
+		 "context": [{"key": "panel", "operand": "replace"}, {"key": "panel_has_focus"}]
+	},
+
+	// Find in Files panel key bindings
+	{ "keys": ["super+enter"], "command": "replace_all",
+		"context": [{"key": "panel", "operand": "find_in_files"}, {"key": "panel_has_focus"}]
+	},
+
+	{ "keys": ["f3"], "command": "find_next" },
+]
