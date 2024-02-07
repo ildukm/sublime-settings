@@ -1,6 +1,11 @@
 // Settings in here override those in "Default/Preferences.sublime-settings",
 // and are overridden in turn by syntax-specific settings.
 {
-	"font_size": 15,
+	"font_size": 16,
 	"font_face": "Fira Code",
+	"ignored_packages":
+	[
+		"Vintage",
+	],
+	"index_files": true,
 }

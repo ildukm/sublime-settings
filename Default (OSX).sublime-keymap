@@ -18,4 +18,6 @@
 	},
 
 	{ "keys": ["f3"], "command": "find_next" },
+
+	{ "keys": ["super+t"], "command": "new_file" },
 ]
