@@ -1,0 +1,84 @@
+%YAML 1.2
+---
+# AWS Config / Credentials syntax highlighting for Sublime Text
+# 설치: Preferences > Browse Packages... 로 열린 폴더의 User/ 안에 이 파일을 넣으세요.
+# 파일명은 반드시 "AWS Config.sublime-syntax" 로 유지.
+name: AWS Config
+file_extensions: []
+scope: source.aws-config
+hidden: false
+
+# 확장자 없는 ~/.aws/config, ~/.aws/credentials 자동 인식용
+first_line_match: '^\s*\[(default|profile\s|sso-session\s|services\s)'
+
+variables:
+  identifier: '[A-Za-z0-9_][A-Za-z0-9_\-.]*'
+  region: '\b[a-z]{2}-[a-z]+-\d{1,2}\b'
+
+contexts:
+  main:
+    - include: comments
+    - include: sections
+    - include: keys
+
+  comments:
+    - match: '^\s*([#;].*)$'
+      scope: comment.line.aws-config
+
+  sections:
+    - match: '\s*(\[)'
+      scope: punctuation.section.brackets.begin.aws-config
+      push:
+        - meta_scope: meta.section.aws-config
+        - match: '(\])'
+          scope: punctuation.section.brackets.end.aws-config
+          pop: true
+        # [profile xxx], [sso-session xxx], [services xxx] 의 키워드
+        - match: '\b(profile|sso-session|services)\b'
+          scope: keyword.declaration.section.aws-config
+        # 프로파일/섹션 이름
+        - match: '[^\]\s]+'
+          scope: entity.name.section.aws-config
+
+  keys:
+    - match: '^\s*({{identifier}})\s*(=)'
+      captures:
+        1: variable.other.member.key.aws-config
+        2: keyword.operator.assignment.aws-config
+      push: value
+
+  value:
+    - meta_scope: meta.value.aws-config
+    - match: '$'
+      pop: true
+    # ARN: 슬래시 앞(arn:...:role/)은 arn 색, 슬래시 뒤 역할 이름은 별도 색
+    - match: '(arn:[^\s]*?/)([^\s]+)'
+      captures:
+        1: constant.other.arn.aws-config
+        2: string.unquoted.role.aws-config
+    # 슬래시 없는 ARN (arn:aws:iam::123:root 등)
+    - match: 'arn:[^\s]*'
+      scope: constant.other.arn.aws-config
+    # --sp-id <값> : idp-id와 동일하게 string(초록) 처리
+    - match: '(--sp-id)\s+(\S+)'
+      captures:
+        1: variable.parameter.flag.aws-config
+        2: string.unquoted.spid.aws-config
+    # --flag / -f 형태의 옵션
+    - match: '(--?){{identifier}}'
+      scope: variable.parameter.flag.aws-config
+    # us-west-2 같은 리전
+    - match: '{{region}}'
+      scope: constant.language.region.aws-config
+    # ~/.aws 같은 경로
+    - match: '~?/[\w./\-]+'
+      scope: string.other.path.aws-config
+    # boolean
+    - match: '\b(true|false|yes|no)\b'
+      scope: constant.language.boolean.aws-config
+    # 계정번호 등 숫자
+    - match: '\b\d+\b'
+      scope: constant.numeric.aws-config
+    # 나머지 토큰 (명령어 이름, 채널명 등)
+    - match: '[^\s]+'
+      scope: string.unquoted.value.aws-config
